@@ -1,0 +1,50 @@
+<dom-module id="top-sites">
+    <style>
+
+    </style>
+
+
+    <template>
+        <h2>{{name}}</h2>
+        <h3>Top Sites</h3>
+        <ul>
+            <template is="dom-repeat" items="{{sites}}">
+                <li>
+                    <span>{{item.value}}</span>
+                    <span>{{item.name}}</span>
+                </li>
+            </template>
+        </ul>
+    </template>
+</dom-module>
+
+
+
+
+
+<script>
+    Polymer({
+        is: "top-sites",
+        properties: {
+            name: String,
+            data: {
+                type: Object,
+                observer: 'change'
+            }
+        },
+        change: function () {
+            var sites = {};
+            for (var day in this.data) {
+                for (var site in this.data[day]) {
+                    if (!sites[site]) sites[site] = 0;
+                    sites[site] += this.data[day][site];
+                }
+            }
+            sites = ObjectToArray(sites);
+            sites.sort(valueSort);
+            sites = sites.slice(0, 10);
+            console.log('sites', sites);
+            this.set('sites', sites);
+        }
+    });
+</script>

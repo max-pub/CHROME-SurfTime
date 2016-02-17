@@ -1,0 +1,43 @@
+<script src="../lib/STORE.js"></script>
+<link rel="import" href="top-sites.html">
+
+<dom-module id="full-app">
+    <style>
+
+    </style>
+
+
+    <template>
+        <h1>SurfTime</h1>
+        <template is="dom-repeat" items="{{toArray(months)}}">
+            <top-sites name="{{item.name}}" data="{{item.value}}"></top-sites>
+        </template>
+    </template>
+</dom-module>
+
+
+
+
+
+<script>
+    Polymer({
+        is: "full-app",
+        properties: {},
+        ready: function () {
+            STORE.getAll(function (list) {
+                console.log(list);
+                var months = {};
+                for (var date in list) {
+                    if (!months[date.substring(0, 7)]) months[date.substring(0, 7)] = {};
+                    months[date.substring(0, 7)][date.substring(8)] = list[date];
+                }
+                console.log(months);
+                this.set('months', months);
+            }.bind(this));
+        },
+        toArray: ObjectToArray
+            //        function (o) {
+            //            return ObjectToArray(o);
+            //        }
+    });
+</script>
