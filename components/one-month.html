@@ -1,0 +1,73 @@
+<link rel="import" href="top-sites.html">
+
+<dom-module id="one-month">
+    <style>
+        table {
+            width: 100%;
+        }
+    </style>
+
+
+    <template>
+        <h2>{{month}}</h2>
+        <table>
+            <tr>
+                <td>
+                    <top-sites data="{{monthSites}}"></top-sites>
+                </td>
+                <td>
+                    <top-sites data="{{monthSites}}"></top-sites>
+                </td>
+                <td>
+                    <top-sites data="{{monthSites}}"></top-sites>
+                </td>
+            </tr>
+            <tr>
+                <td colspan='3' style='height: 200px; background: silver;'>
+                    BAR-CHART
+                </td>
+            </tr>
+        </table>
+    </template>
+
+</dom-module>
+
+
+
+
+
+<script>
+    Polymer({
+        is: "one-month",
+        properties: {
+            name: {
+                type: String,
+                observer: 'nameChange'
+            },
+            data: {
+                type: Object,
+                observer: 'dataChange'
+            }
+        },
+        nameChange: function () {
+            var months = "January,February,March,April,May,June,July,August,September,October,November,December".split(',');
+            var tmp = this.name.split('-');
+            this.set('month', months[tmp[1] * 1 - 1] + ' ' + tmp[0]);
+        },
+
+        dataChange: function () {
+            this.set('monthSites', this.combineMonth(this.data));
+        },
+
+        combineMonth: function (data) {
+            var sites = {};
+            for (var day in data) {
+                for (var site in data[day]) {
+                    if (!sites[site]) sites[site] = 0;
+                    sites[site] += data[day][site];
+                }
+            }
+            return sites;
+        }
+    });
+</script>

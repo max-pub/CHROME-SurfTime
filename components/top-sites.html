@@ -1,20 +1,26 @@
 <dom-module id="top-sites">
     <style>
+        h3 {
+            margin-bottom: 3px;
+        }
 
+        .time {
+            text-align: right;
+            color: gray;
+        }
     </style>
 
 
     <template>
-        <h2>{{name}}</h2>
         <h3>Top Sites</h3>
-        <ul>
+        <table>
             <template is="dom-repeat" items="{{sites}}">
-                <li>
-                    <span>{{item.value}}</span>
-                    <span>{{item.name}}</span>
-                </li>
+                <tr>
+                    <td class='time'>{{readTime(item.value)}}</td>
+                    <td class='name'>{{item.name}}</td>
+                </tr>
             </template>
-        </ul>
+        </table>
     </template>
 </dom-module>
 
@@ -26,25 +32,24 @@
     Polymer({
         is: "top-sites",
         properties: {
-            name: String,
             data: {
                 type: Object,
                 observer: 'change'
             }
         },
         change: function () {
-            var sites = {};
-            for (var day in this.data) {
-                for (var site in this.data[day]) {
-                    if (!sites[site]) sites[site] = 0;
-                    sites[site] += this.data[day][site];
-                }
-            }
-            sites = ObjectToArray(sites);
-            sites.sort(valueSort);
-            sites = sites.slice(0, 10);
+            sites = ObjectToArray(this.data);
+            sites.sort(function (a, b) {
+                return b.value - a.value
+            });
+            sites = sites.slice(0, 7);
             console.log('sites', sites);
             this.set('sites', sites);
+        },
+        readTime: function (seconds) {
+            if (seconds / 3600 > 1) return Math.floor(seconds / 3600) + 'h';
+            if (seconds / 60 > 1) return Math.floor(seconds / 60) + 'm';
+            return seconds + 's';
         }
     });
 </script>

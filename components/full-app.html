@@ -1,5 +1,5 @@
 <script src="../lib/STORE.js"></script>
-<link rel="import" href="top-sites.html">
+<link rel="import" href="one-month.html">
 
 <dom-module id="full-app">
     <style>
@@ -10,7 +10,7 @@
     <template>
         <h1>SurfTime</h1>
         <template is="dom-repeat" items="{{toArray(months)}}">
-            <top-sites name="{{item.name}}" data="{{item.value}}"></top-sites>
+            <one-month name="{{item.name}}" data="{{item.value}}"></one-month>
         </template>
     </template>
 </dom-module>
