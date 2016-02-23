@@ -1,30 +1,40 @@
-<link rel="import" href="top-sites.html">
+<link rel="import" href="top-items.html">
+<link rel="import" href="bar-chart.html">
 
 <dom-module id="one-month">
     <style>
         table {
             width: 100%;
         }
+
+        h2 {
+            margin-top: 50px;
+            margin-bottom: 5px;
+        }
+
+        .top-items {
+            vertical-align: top;
+        }
     </style>
 
 
     <template>
-        <h2>{{month}}</h2>
+        <h2>{{title}}</h2>
         <table>
-            <tr>
+            <tr class='top-items'>
                 <td>
-                    <top-sites data="{{monthSites}}"></top-sites>
+                    <top-items name="Domains" data="{{domains}}"></top-items>
                 </td>
                 <td>
-                    <top-sites data="{{monthSites}}"></top-sites>
+                    <top-items name="Categories" data="{{tags}}"></top-items>
                 </td>
                 <td>
-                    <top-sites data="{{monthSites}}"></top-sites>
+                    <top-items name="Companies" data="{{brands}}"></top-items>
                 </td>
             </tr>
             <tr>
-                <td colspan='3' style='height: 200px; background: silver;'>
-                    BAR-CHART
+                <td colspan='3'>
+                    <bar-chart data="{{bars}}"></bar-chart>
                 </td>
             </tr>
         </table>
@@ -40,34 +50,21 @@
     Polymer({
         is: "one-month",
         properties: {
-            name: {
+            month: {
                 type: String,
-                observer: 'nameChange'
-            },
-            data: {
-                type: Object,
-                observer: 'dataChange'
+                observer: 'monthChange'
             }
         },
-        nameChange: function () {
+        monthChange: function () {
             var months = "January,February,March,April,May,June,July,August,September,October,November,December".split(',');
-            var tmp = this.name.split('-');
-            this.set('month', months[tmp[1] * 1 - 1] + ' ' + tmp[0]);
-        },
-
-        dataChange: function () {
-            this.set('monthSites', this.combineMonth(this.data));
-        },
-
-        combineMonth: function (data) {
-            var sites = {};
-            for (var day in data) {
-                for (var site in data[day]) {
-                    if (!sites[site]) sites[site] = 0;
-                    sites[site] += data[day][site];
-                }
-            }
-            return sites;
+            var tmp = this.month.split('-');
+            this.set('title', months[tmp[1] * 1 - 1] + ' ' + tmp[0]);
+            this.set('domains', DATA.domains[this.month]);
+            this.set('tags', DATA.tags[this.month]);
+            this.set('brands', DATA.brands[this.month]);
+            this.set('bars', DATA.bars[this.month]);
         }
+
+
     });
 </script>

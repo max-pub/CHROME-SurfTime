@@ -1,4 +1,8 @@
 <script src="../lib/STORE.js"></script>
+<script src="../lib/TAGS.js"></script>
+<script src="../lib/BRANDS.js"></script>
+<script src="../lib/lib.js"></script>
+<script src="../lib/data.js"></script>
 <link rel="import" href="one-month.html">
 
 <dom-module id="full-app">
@@ -9,8 +13,8 @@
 
     <template>
         <h1>SurfTime</h1>
-        <template is="dom-repeat" items="{{toArray(months)}}">
-            <one-month name="{{item.name}}" data="{{item.value}}"></one-month>
+        <template is="dom-repeat" items="{{months}}">
+            <one-month month="{{item}}"></one-month>
         </template>
     </template>
 </dom-module>
@@ -24,20 +28,8 @@
         is: "full-app",
         properties: {},
         ready: function () {
-            STORE.getAll(function (list) {
-                console.log(list);
-                var months = {};
-                for (var date in list) {
-                    if (!months[date.substring(0, 7)]) months[date.substring(0, 7)] = {};
-                    months[date.substring(0, 7)][date.substring(8)] = list[date];
-                }
-                console.log(months);
-                this.set('months', months);
-            }.bind(this));
-        },
-        toArray: ObjectToArray
-            //        function (o) {
-            //            return ObjectToArray(o);
-            //        }
+            console.log('data-moths', DATA.months);
+            this.months = Object.keys(DATA.months);
+        }
     });
 </script>

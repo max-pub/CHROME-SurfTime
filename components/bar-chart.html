@@ -1,0 +1,55 @@
+<dom-module id="bar-chart">
+    <style>
+        table {
+            width: 100%;
+        }
+
+        td {
+            vertical-align: bottom;
+            width: 3%;
+        }
+
+        .bar {
+            width: 100%;
+            background: orange;
+        }
+
+        .value {
+            text-align: center;
+        }
+    </style>
+
+
+    <template>
+        <table>
+            <tr>
+                <template is="dom-repeat" items="{{data}}">
+                    <td>
+                        <div class='value'>{{item}}</div>
+                        <div class='bar' style$="height:{{item}}px;"></div>
+                        <div class='label'>{{item}}</div>
+                    </td>
+                </template>
+            </tr>
+        </table>
+    </template>
+</dom-module>
+
+
+
+
+
+<script>
+    Polymer({
+        is: "bar-chart",
+        properties: {
+            data: {
+                type: Array,
+                observer: 'change'
+            }
+        },
+        change: function () {
+            console.log('bars', this.data);
+        }
+    });
+</script>
