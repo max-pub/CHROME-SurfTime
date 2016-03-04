@@ -1,8 +1,12 @@
 <script src="../lib/STORE.js"></script>
 <script src="../lib/TAGS.js"></script>
+<script src="../lib/TwoPartTLDs.js"></script>
+<script src="../lib/TLDmerge.js"></script>
 <script src="../lib/BRANDS.js"></script>
 <script src="../lib/lib.js"></script>
-<script src="../lib/data.js"></script>
+<script src="../lib/API.js"></script>
+
+
 <link rel="import" href="one-month.html">
 
 <dom-module id="full-app">
@@ -16,6 +20,9 @@
         <template is="dom-repeat" items="{{months}}">
             <one-month month="{{item}}"></one-month>
         </template>
+
+        <top-items name="Uncategorized" data="{{noCAT}}" limit='50'></top-items>
+
     </template>
 </dom-module>
 
@@ -28,8 +35,13 @@
         is: "full-app",
         properties: {},
         ready: function () {
-            console.log('data-moths', DATA.months);
-            this.months = Object.keys(DATA.months);
+            API.loadData(function(days){
+                // var months = API.groupDaysByMonth(days);
+                API.process(days);
+            });
+            console.log('data-months', API.DATA);
+            this.months = Object.keys(API.DATA.months).reverse();
+            this.noCAT = API.DATA.noCAT;
         }
     });
 </script>

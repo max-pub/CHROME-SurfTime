@@ -1,0 +1,56 @@
+<dom-module id="top-categories">
+    <style>
+        h3 {
+            margin-bottom: 3px;
+        }
+
+        .time {
+            text-align: right;
+            color: silver;
+        }
+    </style>
+
+
+    <template>
+        <h3>Top {{name}}</h3>
+        <table>
+            <template is="dom-repeat" items="{{items}}">
+                <tr>
+                    <td class='time'>{{readTime(item.value)}}</td>
+                    <td class='name'>{{item.name}}</td>
+                </tr>
+            </template>
+        </table>
+    </template>
+</dom-module>
+
+
+
+
+
+<script>
+    Polymer({
+        is: "top-categories",
+        properties: {
+            name: String,
+            data: {
+                type: Object,
+                observer: 'change'
+            }
+        },
+        change: function () {
+            var items = ObjectToArray(this.data);
+            items.sort(function (a, b) {
+                return b.value - a.value
+            });
+            items = items.slice(0, 7);
+            //            console.log('items', items);
+            this.set('items', items);
+        },
+        readTime: function (seconds) {
+            if (seconds / 3600 > 1) return Math.round(seconds / 3600) + 'h';
+            if (seconds / 60 > 1) return Math.round(seconds / 60) + 'm';
+            return seconds + 's';
+        }
+    });
+</script>

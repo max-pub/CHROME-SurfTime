@@ -1,0 +1,80 @@
+<link rel="import" href="top-items.html">
+<link rel="import" href="bar-chart.html">
+
+<dom-module id="one-month">
+    <style>
+        h2 {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        top-items{
+            display: block;
+            margin-top: 30px;
+        }
+    </style>
+
+
+    <template>
+        <h2>{{title}}</h2>
+        <bar-chart labels="{{BAR.labels}}" data="{{BAR.data}}" values="{{BAR.values}}" pixel='100'></bar-chart>
+        <top-items data="{{domains}}" limit='30'></top-items>
+    </template>
+
+</dom-module>
+
+
+
+
+
+<script>
+    Polymer({
+        is: "one-month",
+        properties: {
+            month: {
+                type: String,
+                observer: 'monthChange'
+            }
+        },
+        monthChange: function () {
+            var months = "January,February,March,April,May,June,July,August,September,October,November,December".split(',');
+            var tmp = this.month.split('-');
+            this.set('title', months[tmp[1] * 1 - 1] + ' ' + tmp[0]);
+            this.set('domains', API.DATA.months[this.month].domains);
+            // this.set('tags', API.DATA.months[this.month].categories);
+            // this.set('brands', DATA.brands[this.month]);
+            this.set('BAR', this.setBar());
+        },
+
+        setBar: function(){
+            var BAR = {labels:[], data:[], values:[]};
+            var date = this.month.split('-');
+            date = new Date(date[0], date[1], 0);
+            var dayNumber = date.getDate();
+            var dayData = API.DATA.months[this.month].days;
+            for(var i=1; i<=dayNumber; i++){
+                date.setDate(i);
+                var label = i;
+                if(date.getDay()===0) label = 'Sun';
+                if(date.getDay()===6) label = 'Sat';
+                BAR.labels.push(label);
+                var day = LeftPadZero(i);
+                var dayTime = 0;
+                if(dayData[day]) {
+                    for(var cat in dayData[day].categories)
+                        dayTime += dayData[day].categories[cat];
+                }
+                BAR.data.push(dayTime);
+                var hours = Math.floor(dayTime/60/60);
+                var minutes = Math.floor(dayTime/60%60);
+                if(hours||minutes)
+                    BAR.values.push(LeftPadZero(hours)+':'+LeftPadZero(minutes));
+                else 
+                    BAR.values.push('');
+            }
+            return BAR;
+        }
+
+
+    });
+</script>
+

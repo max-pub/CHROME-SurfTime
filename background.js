@@ -1,36 +1,46 @@
-checkActiveTab = function () {
+checkActiveTab = function() {
     chrome.tabs.query({
         active: true
-    }, function (tabs) {
-        var tab = tabs[0];
-        // console.log('status',tab.status);
-        // if(tab.status==='loading') return;
-        if (tab.url.substring(0, 9) === 'chrome://') return;
-        if (tab.url.substring(0, 19) === 'chrome-extension://') return;
+    }, function(tabs) {
+        for (i in tabs)
+            checkActiveWindow(tabs[i]);
+    });
+}
+setInterval(checkActiveTab, 1000);
 
-        chrome.windows.get(tab.windowId, {}, function (win) {
-            if (!win.focused) return;
-            var domain = getDomain(tab.url);
-            var date = ISOdate();
-            // console.log('tab',win.focused, domain, STORE);
-            STORE.get(date, function (val) {
-                // console.log('store',val);
-                if (!val) val = {};
-                if (!val[domain]) val[domain] = 0;
-                val[domain]++;
-                STORE.set(date, val);
-                chrome.browserAction.setBadgeText({
-                    text: val[domain] + ''
-                });
-                chrome.browserAction.setBadgeBackgroundColor({
-                    color: '#000'
-                });
+
+checkActiveWindow = function(tab) {
+    var domain = getDomain(tab.url);
+    // console.log('tab', tab.id, 'win', tab.windowId, domain);
+    if (tab.url.substring(0, 9) === 'chrome://') return;
+    if (tab.url.substring(0, 19) === 'chrome-extension://') return;
+    // if(tab.status==='loading') return;
+
+    chrome.windows.get(tab.windowId, {}, function(win) {
+        // console.log(win.focused, domain);
+        if (!win.focused) return;
+        var date = ISOdate();
+        // console.log('win', win.id, domain);
+        STORE.get(date, function(val) {
+            // console.log('store', val);
+            if (!val) val = {};
+            if (!val[domain]) val[domain] = 0;
+            val[domain]++;
+            // console.log('store', domain, val[domain], 'tab', tab.id, 'win', tab.windowId);
+            STORE.set(date, val);
+            chrome.browserAction.setBadgeText({
+                text: val[domain] + ''
+            });
+            chrome.browserAction.setBadgeBackgroundColor({
+                color: '#000'
             });
         });
     });
+
 }
 
-getDomain = function (url) {
+
+getDomain = function(url) {
     // var domain = tab.url.split('/')[2];
     var parser = document.createElement('a');
     parser.href = url;
@@ -38,17 +48,16 @@ getDomain = function (url) {
     return domain;
 }
 
-ISOdate = function () {
+ISOdate = function() {
     var D = new Date();
     var m = D.getMonth() + 1;
     var d = D.getDate();
     return D.getFullYear() + '-' + (m < 10 ? ('0' + m) : m) + '-' + (d < 10 ? ('0' + d) : d);
 }
 
-setInterval(checkActiveTab, 1000);
 
 
-chrome.browserAction.onClicked.addListener(function (tab) {
+chrome.browserAction.onClicked.addListener(function(tab) {
     chrome.tabs.create({
         url: 'csp.html'
     });
@@ -58,12 +67,6 @@ chrome.browserAction.onClicked.addListener(function (tab) {
 // console.log('save',domain,val[domain]);
 // var statusBox = '<div id="SurfTimeStatusBox" style="position:absolute;top:3px;right:3px;background:red;">yeah</div>';
 // chrome.tabs.executeScript(tab.id,{code:statusBox});
-
-
-
-
-
-
 
 
 
@@ -97,7 +100,6 @@ chrome.browserAction.onClicked.addListener(function (tab) {
 
 
 
-
 // chrome.idle.setDetectionInterval(THRESHOLD);
 
 // chrome.idle.onStateChanged.addListener(function(state){
@@ -106,8 +108,6 @@ chrome.browserAction.onClicked.addListener(function (tab) {
 //     else if(state=='locked') locked();
 //     else idle();
 // });
-
-
 
 
 

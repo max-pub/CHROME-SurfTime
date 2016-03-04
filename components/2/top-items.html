@@ -17,7 +17,7 @@
             <template is="dom-repeat" items="{{items}}">
                 <tr>
                     <td class='time'>{{readTime(item.value)}}</td>
-                    <td class='name'>{{item.name}}</td>
+                    <td class='name' style$="color: [[tagColor(item.name)]]">{{item.name}}</td>
                 </tr>
             </template>
         </table>
@@ -33,17 +33,22 @@
         is: "top-items",
         properties: {
             name: String,
+            limit: {
+                type: Number,
+                value: 7
+            },
             data: {
                 type: Object,
                 observer: 'change'
             }
         },
-        change: function () {
+        change: function () { 
+            // delete this.data['other'];
             var items = ObjectToArray(this.data);
             items.sort(function (a, b) {
                 return b.value - a.value
             });
-            items = items.slice(0, 7);
+            items = items.slice(0, this.limit);
             //            console.log('items', items);
             this.set('items', items);
         },
@@ -51,6 +56,12 @@
             if (seconds / 3600 > 1) return Math.round(seconds / 3600) + 'h';
             if (seconds / 60 > 1) return Math.round(seconds / 60) + 'm';
             return seconds + 's';
+        },
+        tagColor: function(name){
+            var color = TagColors[name.toLowerCase()];
+            if(!color)
+                color = TagColors[API.getCategory(name).toLowerCase()];
+            return color;
         }
     });
 </script>

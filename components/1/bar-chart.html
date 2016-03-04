@@ -1,0 +1,81 @@
+<dom-module id="bar-chart">
+    <style>
+        table {
+            width: 100%;
+        }
+
+        td {
+            vertical-align: bottom;
+            width: 3%;
+        }
+
+        .bar {
+            width: 100%;
+            background: CornflowerBlue ;
+        }
+
+        .label,.value {
+            text-align: center;
+            color: silver;
+        }
+    </style>
+
+
+    <template>
+        <table>
+            <tr>
+                <template is="dom-repeat" items="{{data}}">
+                    <td>
+                        <div class='value'>{{value(index)}}</div>
+                        <div class='bar' style$="height:{{getData(index)}};"></div>
+                        <div class='label'>{{label(index)}}</div>
+                    </td>
+                </template>
+            </tr>
+        </table>
+    </template>
+</dom-module>
+
+
+
+
+
+<script>
+    Polymer({
+        is: "bar-chart",
+        properties: {
+            labels: {
+                type: Array,
+                observer: 'change'
+            },
+            data: {
+                type: Array,
+                observer: 'change'
+            },
+            values: {
+                type: Array,
+                observer: 'change'
+            },
+            pixel: {
+                type: Number,
+                observer: 'change',
+                value: 1
+            },
+        },
+        change: function () {
+            console.log("LABELS",this.labels);
+            console.log('DATA', this.data);
+            console.log('VALUES', this.values);
+            console.log('PIXEL', this.pixel);
+        },
+        label: function(index){
+            return this.labels[index];
+        },
+        value: function(index){
+            return this.values[index];
+        },
+        getData: function(index){
+            return Math.round(this.data[index]/this.pixel)+'px';
+        }
+    });
+</script>

@@ -1,0 +1,68 @@
+<dom-module id="top-items">
+    <style>
+        .list{
+            -webkit-column-width: 200px;
+            /*height: 100px;*/
+        }
+        .time {
+            text-align: right;
+            color: silver;
+            display: inline-block;
+            width: 40px;
+        }
+    </style>
+
+
+    <template>
+        <div class='list'>
+        <template is="dom-repeat" items="{{items}}">
+            <div>
+                <span class='time'>{{readTime(item.value)}}</span>
+                <span class='name' style$="color: [[tagColor(item.name)]]">{{item.name}}</span>
+            </div>
+        </template>
+    </template>
+    </div>
+</dom-module>
+
+
+
+
+
+<script>
+    Polymer({
+        is: "top-items",
+        properties: {
+            limit: {
+                type: Number,
+                value: 7
+            },
+            data: {
+                type: Object,
+                observer: 'change'
+            }
+        },
+        change: function () { 
+            // delete this.data['other'];
+            var items = ObjectToArray(this.data);
+            items.sort(function (a, b) {
+                return b.value - a.value
+            });
+            items = items.slice(0, this.limit);
+            //            console.log('items', items);
+            this.set('items', items);
+        },
+        readTime: function (seconds) {
+            if (seconds / 3600 > 1) return Math.round(seconds / 3600) + 'h';
+            if (seconds / 60 > 1) return Math.round(seconds / 60) + 'm';
+            return seconds + 's';
+        },
+        tagColor: function(name){
+            return '';
+            var color = TagColors[name.toLowerCase()];
+            if(!color)
+                color = TagColors[API.getCategory(name).toLowerCase()];
+            return color;
+        }
+    });
+</script>

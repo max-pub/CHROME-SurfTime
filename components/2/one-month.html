@@ -23,18 +23,15 @@
         <table>
             <tr class='top-items'>
                 <td>
-                    <top-items name="Domains" data="{{domains}}"></top-items>
-                </td>
-                <td>
                     <top-items name="Categories" data="{{tags}}"></top-items>
                 </td>
                 <td>
-                    <top-items name="Companies" data="{{brands}}"></top-items>
+                    <top-items name="Domains" data="{{domains}}" limit='20'></top-items>
                 </td>
             </tr>
             <tr>
                 <td colspan='3'>
-                    <bar-chart data="{{bars}}"></bar-chart>
+                    <bar-chart month="{{bars}}"></bar-chart>
                 </td>
             </tr>
         </table>
@@ -59,12 +56,17 @@
             var months = "January,February,March,April,May,June,July,August,September,October,November,December".split(',');
             var tmp = this.month.split('-');
             this.set('title', months[tmp[1] * 1 - 1] + ' ' + tmp[0]);
-            this.set('domains', DATA.domains[this.month]);
-            this.set('tags', DATA.tags[this.month]);
-            this.set('brands', DATA.brands[this.month]);
-            this.set('bars', DATA.bars[this.month]);
+            this.set('domains', API.DATA.months[this.month].domains);
+            this.set('tags', API.DATA.months[this.month].categories);
+            // this.set('brands', DATA.brands[this.month]);
+            // this.set('bars', DATA.bars[this.month]);
         }
 
 
     });
 </script>
+
+<!--                 <td>
+                    <top-items name="Companies" data="{{brands}}"></top-items>
+                </td>
+ -->
