@@ -17,7 +17,7 @@
     <template>
         <h2>{{title}}</h2>
         <bar-chart labels="{{BAR.labels}}" data="{{BAR.data}}" values="{{BAR.values}}" pixel='100'></bar-chart>
-        <top-items data="{{domains}}" limit='30'></top-items>
+        <!-- <top-items data="{{domains}}" limit='30'></top-items> -->
     </template>
 
 </dom-module>
@@ -64,10 +64,15 @@
                         dayTime += dayData[day].categories[cat];
                 }
                 BAR.data.push(dayTime);
-                var hours = Math.floor(dayTime/60/60);
+                var hours = Math.round(dayTime/60/60);
                 var minutes = Math.floor(dayTime/60%60);
+                var rawHours = dayTime/60/60;
+                console.log('hours',hours,rawHours);
+                if(rawHours > hours) var sign = '>';
+                else var sign = '<';
                 if(hours||minutes)
-                    BAR.values.push(LeftPadZero(hours)+':'+LeftPadZero(minutes));
+                    BAR.values.push(hours+'h');
+                    // BAR.values.push(LeftPadZero(hours)+':'+LeftPadZero(minutes));
                 else 
                     BAR.values.push('');
             }

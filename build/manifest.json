@@ -1,8 +1,9 @@
 {
     "name": "SurfTime",
     "description": "measure your online time",
+    "homepage_url": "https://github.com/max-pub/SurfTime",
     "manifest_version": 2,
-    "version": "1",
+    "version": "1.1",
     "background": {
         "scripts": ["STORE.js", "background.js"]
     },

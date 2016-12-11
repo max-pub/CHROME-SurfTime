@@ -10,13 +10,19 @@
         }
 
         .bar {
-            width: 100%;
+            width: 80%;
             background: CornflowerBlue ;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .label,.value {
             text-align: center;
             color: silver;
+        }
+        .value{
+            font-size: 12px;
+            color: gray;
         }
     </style>
 
@@ -27,7 +33,7 @@
                 <template is="dom-repeat" items="{{data}}">
                     <td>
                         <div class='value'>{{value(index)}}</div>
-                        <div class='bar' style$="height:{{getData(index)}};"></div>
+                        <div class='bar' style$="height:[[height(index)]];background:[[color(index)]]"></div>
                         <div class='label'>{{label(index)}}</div>
                     </td>
                 </template>
@@ -63,10 +69,10 @@
             },
         },
         change: function () {
-            console.log("LABELS",this.labels);
-            console.log('DATA', this.data);
-            console.log('VALUES', this.values);
-            console.log('PIXEL', this.pixel);
+            // console.log("LABELS",this.labels);
+            // console.log('DATA', this.data);
+            // console.log('VALUES', this.values);
+            // console.log('PIXEL', this.pixel);
         },
         label: function(index){
             return this.labels[index];
@@ -74,8 +80,15 @@
         value: function(index){
             return this.values[index];
         },
-        getData: function(index){
+        height: function(index){
             return Math.round(this.data[index]/this.pixel)+'px';
+        },
+        color: function(index){
+            var val = this.data[index];
+            var col = 128-(val/150);
+            if(col<0) col = 0;
+            // console.log('color',col);
+            return "hsla(" + col + ",100%,50%,1)";
         }
     });
 </script>

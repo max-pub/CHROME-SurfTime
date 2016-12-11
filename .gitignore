@@ -1,2 +1,6 @@
 /bower_components/*
 csp.*
+
+*.zip
+
+build.zip
